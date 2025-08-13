@@ -1,12 +1,30 @@
 FROM rasa/rasa:3.6.0-full
 
+# Switch to root user to install system dependencies
+USER root
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libssl-dev \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch back to rasa user
+USER 1001
+
 WORKDIR /app
 
-# Install additional dependencies
-RUN pip install mysql-connector-python python-dotenv
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir mysql-connector-python==8.0.33 python-dotenv==1.0.0
 
 # Copy the application code
-COPY . .
+COPY --chown=1001:1001 . .
 
 # Train the model
 RUN rasa train
