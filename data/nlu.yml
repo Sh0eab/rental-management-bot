@@ -1,0 +1,475 @@
+version: "3.1"
+
+nlu:
+
+- intent: greet
+  examples: |
+    - hello
+    - hi
+    - hey
+    - assalamu alaikum
+    - good morning
+    - good evening
+    - good afternoon
+    - hi there
+    - hello there
+    - namaste
+    - salam
+    - what's up
+    - howdy
+    - salaam aleikum
+    - adaab
+    - ki obostha
+    - kemon achen
+    - hello bhai
+    - oi
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you later
+    - talk to you later
+    - bye bye
+    - farewell
+    - take care
+    - until next time
+    - catch you later
+    - allah hafez
+    - khuda hafez
+    - tarpor kotha hobe
+    - jay bhai
+
+- intent: search_rooms
+  examples: |
+    - I'm looking for a room
+    - I need a place to rent
+    - Can you help me find a room?
+    - I want to rent a room
+    - Show me available rooms
+    - I'm searching for accommodation
+    - Help me find a rental
+    - I need housing
+    - Looking for a place to stay
+    - Find me a room to rent
+    - i need a room in bangladesh
+    - i need a room in dhaka
+    - room khujtechi
+    - bashar room dorkar
+    - accommodation chai
+    - rental room dekhao
+    - bhara dite chai
+    - room lagbe
+    - thakhar jayga dorkar
+    - bachelor accommodation
+    - family accommodation
+    - mess khujchi
+    - hostel dorkar
+    - can you show me some rooms
+    - what rooms do you have
+    - any rooms available
+    - help me with room search
+    - searching for rental property
+    - want to see room options
+    - room er kotha bolun
+    - basha khuja diben
+
+- intent: inform_location
+  examples: |
+    - [Dhaka](location)
+    - [Dhanmondi](location)
+    - [Gulshan](location)
+    - [Uttara](location)
+    - [Chittagong](location)
+    - [Banani](location)
+    - [Sylhet](location)
+    - [Rajshahi](location)
+    - [Khulna](location)
+    - [Mohammadpur](location)
+    - [Wari](location)
+    - [Agrabad](location)
+    - [Bashundhara](location)
+    - [Mirpur](location)
+    - [Tejgaon](location)
+    - [Farmgate](location)
+    - [New Market](location)
+    - [Old Dhaka](location)
+    - [Motijheel](location)
+    - [Ramna](location)
+    - [Pallabi](location)
+    - [Shantinagar](location)
+    - [Elephant Road](location)
+    - [Bailey Road](location)
+    - [Panthapath](location)
+    - [Kalabagan](location)
+    - [Lalmatia](location)
+    - [Kathalbagan](location)
+    - [Eskaton](location)
+    - [Segunbagicha](location)
+    - [Malibagh](location)
+    - [Rampura](location)
+    - [Badda](location)
+    - [Baridhara](location)
+    - [Hatirjheel](location)
+    - [Nasirabad](location)
+    - [Zindabazar](location)
+    - I want something in [Dhaka](location)
+    - Looking for rooms in [Dhanmondi](location)
+    - [Gulshan](location) area
+    - Near [TSC](location)
+    - In [Uttara](location)
+    - [Chittagong](location) preferably
+    - Somewhere in [Banani](location)
+    - [Sylhet](location) city
+    - [Rajshahi](location) area
+    - Close to [Dhaka University](location)
+    - [Mohammadpur](location) theke
+    - [Khulna](location) e
+    - [Agrabad](location) commercial area
+    - Near [Ramna Park](location)
+    - [Wari](location) old dhaka
+    - dhaka
+    - gulshan
+    - gulshan dhaka
+    - dhaka gulshan
+    - [dhaka](location) te
+    - [gulshan](location) e
+    - [dhaka](location) te kothao
+    - [gulshan](location) er kachakachi
+    - anywhere in [dhaka](location)
+    - [dhanmondi](location) or nearby
+    - close to [uttara](location)
+    - near [dhaka university](location)
+    - [mirpur](location) sector
+    - old [dhaka](location) area
+    - [chittagong](location) port city
+    - [sylhet](location) shahr
+    - [banani](location) commercial area
+    - [gulshan](location) 1 or 2
+    - [dhanmondi](location) 15 or 27
+
+- intent: inform_budget
+  examples: |
+    - [8000](budget) taka
+    - [15000](budget) tk
+    - [10000](budget) per month
+    - [20000](budget) taka
+    - [8000](budget)
+    - [12000](budget)
+    - [7500](budget) taka
+    - [15000](budget)
+    - [5000](budget) taka
+    - [25000](budget)
+    - [6000](budget) taka
+    - [12000](budget) BDT
+    - [30000](budget)
+    - [35000](budget)
+    - [40000](budget)
+    - [18000](budget)
+    - [22000](budget)
+    - [28000](budget)
+    - [32000](budget)
+    - [45000](budget)
+    - [50000](budget)
+    - [3000](budget) to [5000](budget)
+    - [10000](budget) to [15000](budget)
+    - [20000](budget) to [25000](budget)
+    - My budget is [8000](budget) taka
+    - I can pay up to [15000](budget) tk
+    - Around [10000](budget) per month
+    - Maximum [20000](budget) taka
+    - Between [8000](budget) and [12000](budget)
+    - Under [10000](budget) tk
+    - About [7500](budget) taka
+    - [15000](budget) is my limit
+    - I have [5000](budget) taka to spend
+    - Budget of [25000](budget)
+    - [6000](budget) taka monthly
+    - Around [12000](budget) BDT
+    - 12000 taka
+    - 30000
+    - 12000
+    - 20000
+    - 25000
+    - 8000
+    - 15000
+    - 18000
+    - 22000
+    - 28000
+    - 32000
+    - 35000
+    - 40000
+    - 45000
+    - 50000
+    - amar budget [12000](budget) taka
+    - [15000](budget) taka porjonto dite pari
+    - maximum [20000](budget) dite pari
+    - [5000](budget) theke [8000](budget) er moddhe
+    - kom budget ache, [6000](budget) taka
+    - beshi dite parbo na, [10000](budget) taka
+    - reasonably priced around [15000](budget)
+    - cheap rooms under [8000](budget)
+    - affordable within [12000](budget)
+    - luxury budget [30000](budget) plus
+    - student budget [5000](budget) to [7000](budget)
+    - family budget [25000](budget) to [35000](budget)
+
+- intent: inform_preferences
+  examples: |
+    - I want a [furnished](preference) room
+    - Need [AC](preference)
+    - Must have [WiFi](preference)
+    - [Attached bathroom](preference) required
+    - Looking for [single](room_type) room
+    - Need [shared](room_type) accommodation
+    - Want [studio](room_type) apartment
+    - [Bachelor](occupancy_type) accommodation
+    - [Family](occupancy_type) suitable
+    - [Female](occupancy_type) only
+    - [Male](occupancy_type) only
+    - Need [parking](preference)
+    - [Security](preference) is important
+    - Must have [kitchen](preference) access
+    - [Balcony](preference) preferred
+    - [Generator backup](preference) needed
+    - [Lift](preference) facility required
+    - furnished room chai
+    - ac thakte hobe
+    - wifi lagbe
+    - single room dorkar
+    - family er jonno
+    - bachelor er jonno
+    - meye der jonno
+    - chele der jonno
+    - parking facility
+    - security guard thakte hobe
+
+- intent: ask_more_info
+  examples: |
+    - Tell me more about this room
+    - Can I get more details?
+    - What are the amenities?
+    - Is it furnished?
+    - What's included?
+    - Any more information?
+    - Show me pictures
+    - What's the neighborhood like?
+    - tell me more about room 1
+    - Tell me more about room 1
+    - room 1
+    - more details about room 1
+    - 1
+    - details about first room
+    - first room er details
+    - room number 1
+    - details about the first one
+    - tell me about room number 1
+    - more info about 1st room
+    - what about room 1
+    - room 1 er bishesh details
+    - show me room [2](room_number)
+    - details about room [3](room_number)
+    - room [1](room_number) er aro info
+    - [first](room_number) ta dekhan
+    - [second](room_number) room er details
+    - [third](room_number) er kotha bolun
+    - can i see more photos
+    - what's the exact address
+    - how's the transportation
+    - is it safe area
+    - what's nearby
+    - grocery shops kothay
+    - restaurant ache naki
+    - hospital er kachakachi ache
+
+- intent: affirm
+  examples: |
+    - yes
+    - yeah
+    - yep
+    - sure
+    - of course
+    - that sounds good
+    - yes please
+    - absolutely
+    - correct
+    - right
+    - perfect
+    - exactly
+    - ha
+    - thik ache
+    - hya
+    - hobe
+    - cholbe
+    - thik
+    - right ache
+    - ok
+    - okay
+    - fine
+    - good
+    - nice
+    - excellent
+    - agreed
+    - definitely
+
+- intent: deny
+  examples: |
+    - no
+    - nope
+    - not really
+    - no thanks
+    - that's not what I want
+    - incorrect
+    - wrong
+    - not interested
+    - na
+    - thik na
+    - hobe na
+    - cholbe na
+    - na bhai
+    - need something else
+    - not suitable
+    - doesn't match
+    - too expensive
+    - too far
+    - not good enough
+    - ami chai na
+    - aro dekhao
+    - onnota ache
+
+- intent: request_contact
+  examples: |
+    - How can I contact the owner?
+    - Can I get the phone number?
+    - Contact details please
+    - How to reach the landlord?
+    - Phone number den
+    - malik er number den
+    - kothay jogajog korbo
+    - contact information
+    - owner er sathe kotha bolte chai
+    - visit korte chai
+    - dekhte jete chai
+
+- intent: ask_about_area
+  examples: |
+    - What's the area like?
+    - Is it safe?
+    - How's the neighborhood?
+    - What's nearby?
+    - Transportation options?
+    - Any markets nearby?
+    - Hospital kothay?
+    - School college ache?
+    - Mosque er kachakachi?
+    - Bus stand koto dure?
+    - CNG paoa jay?
+    - Rickshaw paoa jay?
+    - Market kemon?
+    - Restaurant ache naki?
+
+- intent: compare_rooms
+  examples: |
+    - Compare these rooms
+    - What's the difference?
+    - Which is better?
+    - Show me differences
+    - Compare room [1](room_number) and [2](room_number)
+    - Which one should I choose?
+    - Pros and cons?
+    - Room [1](room_number) vs room [2](room_number)
+    - difference between first and second
+    - kon ta valo hobe
+    - compare korun
+
+- intent: nlu_fallback
+  examples: |
+    - I don't understand
+    - what?
+    - huh?
+    - sorry what
+    - can you repeat
+    - I didn't get that
+    - what do you mean
+    - confused
+    - don't know
+    - unclear
+    - বুঝলাম না
+    - কি বললেন
+    - আবার বলুন
+
+- regex: budget
+  examples: |
+    - \b\d{4,6}\b\s*(taka|BDT|tk|৳)?
+    - \b[0-9]{4,6}\b
+    - \b\d{1,2}[kK]\b
+    - \b\d{1,2}\s*thousand\b
+    - \b\d{1,2}\s*hajar\b
+
+- regex: location
+  examples: |
+    - \b(dhaka|gulshan|dhanmondi|uttara|banani|mohammadpur|chittagong|sylhet|rajshahi|khulna|wari|agrabad|bashundhara|mirpur|tejgaon|farmgate|pallabi|shantinagar|elephant\s+road|bailey\s+road|panthapath|kalabagan|lalmatia|kathalbagan|eskaton|segunbagicha|malibagh|rampura|badda|baridhara|hatirjheel|nasirabad|zindabazar)\b
+
+- regex: room_number
+  examples: |
+    - \b(1st|2nd|3rd|first|second|third|1|2|3|4|5)\b
+
+- lookup: locations
+  examples: |
+    - Dhaka
+    - Gulshan
+    - Dhanmondi
+    - Uttara
+    - Banani
+    - Mohammadpur
+    - Chittagong
+    - Sylhet
+    - Rajshahi
+    - Khulna
+    - Wari
+    - Agrabad
+    - Bashundhara
+    - Mirpur
+    - Tejgaon
+    - Farmgate
+    - New Market
+    - Old Dhaka
+    - Motijheel
+    - Ramna
+    - Pallabi
+    - Shantinagar
+    - Elephant Road
+    - Bailey Road
+    - Panthapath
+    - Kalabagan
+    - Lalmatia
+    - Kathalbagan
+    - Eskaton
+    - Segunbagicha
+    - Malibagh
+    - Rampura
+    - Badda
+    - Baridhara
+    - Hatirjheel
+    - Nasirabad
+    - Zindabazar
+
+- lookup: preferences
+  examples: |
+    - furnished
+    - AC
+    - WiFi
+    - attached bathroom
+    - parking
+    - security
+    - kitchen
+    - balcony
+    - generator
+    - lift
+    - single
+    - shared
+    - studio
+    - bachelor
+    - family
+    - female
+    - male

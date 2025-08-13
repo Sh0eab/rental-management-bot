@@ -1,0 +1,43 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  condition: []
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say hello when user greets
+  condition: []
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- rule: Handle no preferences
+  condition:
+  - slot_was_set:
+    - location
+  - slot_was_set:
+    - budget
+  steps:
+  - intent: deny
+  - action: utter_no_preferences
+  - action: action_search_rooms
+
+- rule: Reset search when user wants to start over
+  condition:
+  - active_loop: null
+  - slot_was_set:
+    - search_results
+  steps:
+  - intent: deny
+  - action: action_reset_search
+
+- rule: Handle fallback with help
+  condition: []
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default
+  - action: utter_help
+

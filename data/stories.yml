@@ -1,0 +1,487 @@
+version: "3.1"
+
+stories:
+# Basic greeting and search flows
+- story: basic room search - location first
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Dhaka"
+  - slot_was_set:
+    - location: "Dhaka"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 15000
+  - slot_was_set:
+    - budget: 15000
+  - action: action_search_rooms
+
+- story: search with preferences
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Gulshan"
+  - slot_was_set:
+    - location: "Gulshan"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 20000
+  - slot_was_set:
+    - budget: 20000
+  - action: utter_ask_preferences
+  - intent: inform_preferences
+    entities:
+    - preference: "furnished"
+    - preference: "AC"
+  - slot_was_set:
+    - preferences: ["furnished", "AC"]
+  - action: action_search_rooms
+
+
+
+# Natural language search
+- story: natural language complete search
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+    entities:
+    - location: "Dhaka"
+    - budget: 15000
+  - slot_was_set:
+    - location: "Dhaka"
+    - budget: 15000
+  - action: action_search_rooms
+
+- story: budget range search
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Dhanmondi"
+  - slot_was_set:
+    - location: "Dhanmondi"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 12000
+  - slot_was_set:
+    - budget: 12000
+  - action: action_search_rooms
+
+# Information request flows
+- story: get room details after search
+  steps:
+  - action: action_search_rooms
+  - intent: ask_more_info
+  - action: action_get_room_details
+
+- story: get specific room details
+  steps:
+  - action: action_search_rooms
+  - intent: ask_more_info
+    entities:
+    - room_number: "2"
+  - slot_was_set:
+    - selected_room: "2"
+  - action: action_get_room_details
+
+- story: specific room details
+  steps:
+  - action: action_search_rooms
+  - intent: ask_more_info
+    entities:
+    - room_number: "1"
+  - slot_was_set:
+    - selected_room: "1"
+  - action: action_get_room_details
+
+- story: compare rooms
+  steps:
+  - action: action_search_rooms
+  - intent: compare_rooms
+  - action: action_compare_rooms
+
+- story: contact information request
+  steps:
+  - action: action_search_rooms
+  - intent: request_contact
+  - action: action_get_contact_info
+
+- story: area information request
+  steps:
+  - intent: ask_about_area
+  - action: action_area_information
+
+# Handle no rooms found
+- story: no rooms found with suggestions
+  steps:
+  - action: action_search_rooms
+  - action: utter_no_rooms_found
+  - action: utter_ask_modify_search
+  - intent: affirm
+  - action: utter_ask_location
+
+- story: modify search after no results
+  steps:
+  - action: utter_no_rooms_found
+  - intent: inform_budget
+    entities:
+    - budget: 25000
+  - slot_was_set:
+    - budget: 25000
+  - action: action_search_rooms
+
+# Complex conversation flows
+- story: detailed room inquiry
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+    entities:
+    - location: "Uttara"
+    - budget: 12000
+  - slot_was_set:
+    - location: "Uttara"
+    - budget: 12000
+  - action: action_search_rooms
+  - intent: ask_more_info
+    entities:
+    - room_number: "1"
+  - action: action_get_room_details
+  - intent: ask_about_area
+  - action: action_area_information
+  - intent: request_contact
+  - action: action_get_contact_info
+
+- story: preference-based search
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: inform_preferences
+    entities:
+    - preference: "bachelor"
+    - preference: "furnished"
+  - slot_was_set:
+    - preferences: ["bachelor", "furnished"]
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Banani"
+  - slot_was_set:
+    - location: "Banani"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 18000
+  - slot_was_set:
+    - budget: 18000
+  - action: action_search_rooms
+
+# Direct information flows
+- story: direct location and budget
+  steps:
+  - intent: inform_location
+    entities:
+    - location: "Chittagong"
+  - slot_was_set:
+    - location: "Chittagong"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 10000
+  - slot_was_set:
+    - budget: 10000
+  - action: action_search_rooms
+
+- story: direct budget first
+  steps:
+  - intent: inform_budget
+    entities:
+    - budget: 8000
+  - slot_was_set:
+    - budget: 8000
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Mohammadpur"
+  - slot_was_set:
+    - location: "Mohammadpur"
+  - action: action_search_rooms
+
+# Multiple attempts and refinement
+- story: refine search with new location
+  steps:
+  - action: action_search_rooms
+  - action: utter_no_rooms_found
+  - intent: inform_location
+    entities:
+    - location: "Mirpur"
+  - slot_was_set:
+    - location: "Mirpur"
+  - action: action_search_rooms
+
+- story: increase budget after no results
+  steps:
+  - action: utter_no_rooms_found
+  - intent: inform_budget
+    entities:
+    - budget: 20000
+  - slot_was_set:
+    - budget: 20000
+  - action: action_search_rooms
+
+# Conversational flows with mixed language
+- story: bangla english mixed search
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "dhaka"
+  - slot_was_set:
+    - location: "dhaka"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 15000
+  - slot_was_set:
+    - budget: 15000
+  - action: action_search_rooms
+
+- story: student specific search
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Rajshahi"
+  - slot_was_set:
+    - location: "Rajshahi"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 6000
+  - slot_was_set:
+    - budget: 6000
+  - action: utter_ask_preferences
+  - intent: inform_preferences
+    entities:
+    - preference: "bachelor"
+    - room_type: "single"
+  - slot_was_set:
+    - preferences: ["bachelor"]
+    - room_type: "single"
+  - action: action_search_rooms
+
+# Area-specific searches
+- story: gulshan area search
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: inform_location
+    entities:
+    - location: "Gulshan"
+  - slot_was_set:
+    - location: "Gulshan"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 22000
+  - slot_was_set:
+    - budget: 22000
+  - action: action_search_rooms
+  - intent: ask_about_area
+  - action: action_area_information
+
+- story: family accommodation search
+  steps:
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Khulna"
+  - slot_was_set:
+    - location: "Khulna"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 7000
+  - slot_was_set:
+    - budget: 7000
+  - action: utter_ask_preferences
+  - intent: inform_preferences
+    entities:
+    - occupancy_type: "family"
+    - preference: "security"
+  - slot_was_set:
+    - occupancy_type: "family"
+    - preferences: ["security"]
+  - action: action_search_rooms
+
+# Reset and restart flows
+- story: reset search
+  steps:
+  - action: action_search_rooms
+  - intent: deny
+  - action: action_reset_search
+  - intent: inform_location
+    entities:
+    - location: "Sylhet"
+  - slot_was_set:
+    - location: "Sylhet"
+  - action: utter_ask_budget
+
+# Complex comparison flow
+- story: detailed comparison
+  steps:
+  - action: action_search_rooms
+  - intent: compare_rooms
+  - action: action_compare_rooms
+  - intent: ask_more_info
+    entities:
+    - room_number: "1"
+  - action: action_get_room_details
+  - intent: request_contact
+  - action: action_get_contact_info
+
+# Multi-city search
+- story: compare different cities
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: search_rooms
+    entities:
+    - location: "Dhaka"
+    - budget: 15000
+  - slot_was_set:
+    - location: "Dhaka"
+    - budget: 15000
+  - action: action_search_rooms
+  - intent: inform_location
+    entities:
+    - location: "Chittagong"
+  - slot_was_set:
+    - location: "Chittagong"
+  - action: action_search_rooms
+
+# Goodbye flows
+- story: simple goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: goodbye after search
+  steps:
+  - action: action_search_rooms
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: goodbye after getting details
+  steps:
+  - action: action_get_room_details
+  - intent: goodbye
+  - action: utter_goodbye
+
+# Error handling and fallback
+- story: handle unclear request
+  steps:
+  - intent: nlu_fallback
+  - action: utter_default
+  - action: utter_help
+
+- story: affirm after suggestions
+  steps:
+  - action: utter_ask_modify_search
+  - intent: affirm
+  - action: utter_ask_location
+
+- story: deny suggestions and restart
+  steps:
+  - action: utter_ask_modify_search
+  - intent: deny
+  - action: action_reset_search
+
+# Stories using previously unused utterances
+- story: area safety inquiry
+  steps:
+  - intent: ask_about_area
+  - action: utter_area_safety
+
+- story: contact information general
+  steps:
+  - intent: request_contact
+  - action: utter_contact_info
+
+- story: preferences inquiry
+  steps:
+  - intent: search_rooms
+  - action: utter_ask_location
+  - intent: inform_location
+    entities:
+    - location: "Dhaka"
+  - slot_was_set:
+    - location: "Dhaka"
+  - action: utter_ask_budget
+  - intent: inform_budget
+    entities:
+    - budget: 15000
+  - slot_was_set:
+    - budget: 15000
+  - action: utter_ask_preferences
+
+# Additional stories to handle features previously in rules
+- story: ask preferences after budget
+  steps:
+  - intent: inform_budget
+    entities:
+    - budget: 15000
+  - slot_was_set:
+    - budget: 15000
+  - action: utter_ask_preferences
+
+- story: search after preferences
+  steps:
+  - intent: inform_preferences
+    entities:
+    - preference: "furnished"
+  - slot_was_set:
+    - preferences: ["furnished"]
+  - action: action_search_rooms
+
+- story: standalone area info
+  steps:
+  - intent: ask_about_area
+  - action: action_area_information
+
+- story: standalone contact info
+  steps:
+  - intent: request_contact
+  - action: action_get_contact_info
+
+- story: standalone room comparison
+  steps:
+  - intent: compare_rooms
+  - action: action_compare_rooms
+
+- story: standalone more info
+  steps:
+  - intent: ask_more_info
+  - action: action_get_room_details

@@ -1,0 +1,73 @@
+version: "3.1"
+
+recipe: default.v1
+language: en
+
+pipeline:
+# Tokenization and preprocessing
+- name: WhitespaceTokenizer
+- name: RegexFeaturizer
+- name: LexicalSyntacticFeaturizer
+- name: CountVectorsFeaturizer
+  analyzer: word
+  min_ngram: 1
+  max_ngram: 2
+- name: CountVectorsFeaturizer
+  analyzer: char_wb
+  min_ngram: 1
+  max_ngram: 4
+
+# Intent classification and entity extraction
+- name: DIETClassifier
+  epochs: 100
+  constrain_similarities: true
+  entity_recognition: true
+  intent_classification: true
+  model_confidence: softmax
+  
+# Entity processing
+- name: EntitySynonymMapper
+- name: RegexEntityExtractor  # Critical for number and pattern extraction
+  case_sensitive: false
+  use_lookup_tables: true
+  use_regexes: true
+
+# Response selection for better conversation flow
+- name: ResponseSelector
+  epochs: 150
+  constrain_similarities: true
+  model_confidence: softmax
+  similarity_type: inner
+
+# Fallback handling with improved thresholds
+- name: FallbackClassifier
+  threshold: 0.4  # Slightly higher for better precision
+  ambiguity_threshold: 0.15  # More conservative ambiguity detection
+
+policies:
+# Memory-based policy for exact pattern matching
+- name: MemoizationPolicy
+  max_history: 10  # Increased for better context memory
+
+# Rule-based policy for structured flows
+- name: RulePolicy
+  core_fallback_threshold: 0.4
+  core_fallback_action_name: "utter_default"
+  enable_fallback_prediction: true
+  restrict_rules: true
+
+# Unexpected intent policy for handling edge cases
+- name: UnexpecTEDIntentPolicy
+  max_history: 8  # Better context window
+  epochs: 150
+  constrain_similarities: true
+  model_confidence: softmax
+  
+# Main conversation policy
+- name: TEDPolicy
+  max_history: 8
+  epochs: 200
+  constrain_similarities: true
+  model_confidence: softmax
+  
+assistant_id: enhanced-bangladesh-room-finder

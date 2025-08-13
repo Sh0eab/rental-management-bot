@@ -1,0 +1,143 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - search_rooms
+  - inform_location
+  - inform_budget
+  - inform_preferences
+  - affirm
+  - deny
+  - ask_more_info
+  - request_contact
+  - ask_about_area
+  - compare_rooms
+  - nlu_fallback
+entities:
+  - location
+  - budget
+  - room_type
+  - preference
+  - occupancy_type
+  - room_number
+
+slots:
+  location:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: location
+  
+  budget:
+    type: float
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: budget
+  
+  room_type:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: room_type
+  
+  preferences:
+    type: list
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: preference
+  
+  occupancy_type:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: occupancy_type
+  
+  selected_room:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_entity
+      entity: room_number
+  
+  search_results:
+    type: any
+    influence_conversation: false
+    mappings:
+    - type: custom
+
+responses:
+  utter_greet:
+  - text: "আসসালামু আলাইকুম! Hello! I'm here to help you find the perfect rental room in Bangladesh. 🏠"
+  - text: "Hello! Welcome to Bangladesh Room Finder. I can help you discover great rental options across the country. Which city interests you?"
+  - text: "Hi there! Looking for a room in Bangladesh? I can help you find something perfect within your budget and preferences!"
+
+  utter_goodbye:
+  - text: "আল্লাহ হাফেজ! Goodbye! Feel free to come back anytime you need help finding a room. Take care! 🙏"
+  - text: "Thanks for using Bangladesh Room Finder! Hope you find your perfect room soon. Goodbye!"
+  - text: "It was great helping you! Come back anytime for more room options. Khuda hafez!"
+
+  utter_ask_location:
+  - text: "কোন এলাকায় রুম খুঁজছেন? Which area would you prefer? (Dhaka, Chittagong, Sylhet, etc.)"
+  - text: "Where would you like to find a room? Popular areas include Dhaka (Gulshan, Dhanmondi, Uttara), Chittagong, Sylhet..."
+  - text: "Please let me know your preferred location. I have rooms available in major cities across Bangladesh!"
+
+  utter_ask_budget:
+  - text: "আপনার বাজেট কত? What's your monthly budget for the room? (Please mention in Taka)"
+  - text: "Could you share your budget range? This helps me show you the most suitable options."
+  - text: "What's your monthly rent budget? (e.g., 10000 taka, 15000 tk, etc.)"
+
+  utter_ask_preferences:
+  - text: "Any specific preferences? Like furnished/unfurnished, AC, WiFi, single/shared room, etc.?"
+  - text: "Do you have any special requirements? (AC, furnished, attached bathroom, parking, etc.)"
+  - text: "What type of accommodation are you looking for? Bachelor/family? Any specific amenities needed?"
+
+  utter_no_preferences:
+  - text: "No problem! Let me search for rooms with your basic criteria."
+  - text: "Got it! I'll find rooms based on your location and budget."
+  - text: "Perfect! Searching for rooms now..."
+
+  utter_no_rooms_found:
+  - text: "দুঃখিত! Sorry, I couldn't find rooms matching your exact criteria. Would you like to:"
+  - text: "No exact matches found. Let's try adjusting your search:"
+  - text: "Hmm, no perfect matches. How about we modify the search slightly?"
+
+  utter_ask_modify_search:
+  - text: "• Try a different area nearby?\n• Increase your budget slightly?\n• Consider different room types?\n\nWhat would you prefer?"
+
+  utter_contact_info:
+  - text: "📞 To contact property owners:\n• I'll provide contact details after you select a room\n• You can visit and inspect before deciding\n• Always verify details before making payments"
+
+  utter_area_safety:
+  - text: "🏙️ Area Information:\n• All listed areas are generally safe\n• Most have good transportation links\n• Markets, hospitals, and educational institutions nearby\n• Would you like specific details about any area?"
+
+  utter_default:
+  - text: "দুঃখিত, আমি বুঝতে পারলাম না। Sorry, I didn't understand. Could you please rephrase?"
+  - text: "I'm not sure what you mean. Can you try asking differently? I can help you find rooms, get details, or answer questions about areas."
+  - text: "Could you please clarify? I can help you search for rooms, compare options, or get more information about listings."
+
+  utter_help:
+  - text: "I can help you with:\n🔍 Finding rooms by location and budget\n📋 Getting detailed room information\n📍 Area and neighborhood details\n📞 Contact information for owners\n\nWhat would you like to know?"
+
+actions:
+  - action_search_rooms
+  - action_get_room_details
+  - action_compare_rooms
+  - action_get_contact_info
+  - action_area_information
+  - action_reset_search
+
+forms:
+  room_search_form:
+    required_slots:
+      - location
+      - budget
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
