@@ -19,9 +19,9 @@ WORKDIR /app
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
+# Install Python dependencies from requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir mysql-connector-python==8.0.33 python-dotenv==1.0.0
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
 COPY --chown=1001:1001 . .
