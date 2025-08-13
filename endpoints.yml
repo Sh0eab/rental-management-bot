@@ -1,4 +1,5 @@
-action_endpoint:
-  url: "http://localhost:5055/webhook"
+# Action server endpoint - comment out if not using custom actions
+# action_endpoint:
+#   url: "http://localhost:5055/webhook"
 
-# For production, this will be updated automatically
+# For production deployment without action server

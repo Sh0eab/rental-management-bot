@@ -25,14 +25,14 @@ WORKDIR /app
 # Copy the application code
 COPY --chown=1001:1001 . .
 
-# Make startup script executable
-RUN chmod +x start.sh
-
 # Train the model
 RUN rasa train
 
 # Expose port
 EXPOSE 5005
 
+# Create startup script that uses PORT environment variable
+RUN echo '#!/bin/bash\nset -e\necho "Starting Rasa server..."\nPORT=${PORT:-5005}\necho "Using port: $PORT"\nexec rasa run --enable-api --cors "*" --port "$PORT" --host "0.0.0.0"' > /app/start.sh && chmod +x /app/start.sh
+
 # Start the server
-CMD ["./start.sh"]
+CMD ["/bin/bash", "/app/start.sh"]
