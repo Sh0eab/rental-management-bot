@@ -25,6 +25,9 @@ WORKDIR /app
 # Copy the application code
 COPY --chown=1001:1001 . .
 
+# Make startup script executable
+RUN chmod +x start.sh
+
 # Train the model
 RUN rasa train
 
@@ -32,4 +35,4 @@ RUN rasa train
 EXPOSE 5005
 
 # Start the server
-CMD rasa run --enable-api --cors "*" --port 5005 --host 0.0.0.0
+CMD ["./start.sh"]
