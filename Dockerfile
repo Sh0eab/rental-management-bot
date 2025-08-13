@@ -3,12 +3,12 @@ FROM rasa/rasa:3.6.0-full
 # Switch to root user to install system dependencies
 USER root
 
-# Install system dependencies
+# Install system dependencies needed for mysql-connector-python
 RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    libssl-dev \
-    libffi-dev \
+    python3-dev \
+    default-libmysqlclient-dev \
+    build-essential \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Switch back to rasa user
@@ -16,12 +16,11 @@ USER 1001
 
 WORKDIR /app
 
-# Copy requirements first for better caching
-COPY requirements.txt .
-
-# Install Python dependencies from requirements.txt
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies one by one for better debugging
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir python-dotenv==1.0.0
+RUN pip install --no-cache-dir requests
+RUN pip install --no-cache-dir mysql-connector-python==8.0.33
 
 # Copy the application code
 COPY --chown=1001:1001 . .
