@@ -1,24 +1,18 @@
-FROM python:3.9-slim
+FROM rasa/rasa:3.6.0-full
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements and install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install additional dependencies
+RUN pip install mysql-connector-python python-dotenv
 
 # Copy the application code
 COPY . .
 
-# Change to bot directory
-WORKDIR /app/bot2
+# Train the model
+RUN rasa train
 
-# Expose ports
-EXPOSE 5005 5055
+# Expose port
+EXPOSE 5005
 
-# Command to run the application
-CMD ["sh", "-c", "rasa run actions --port 5055 & rasa run --enable-api --cors '*' --port 5005"]
+# Start the server
+CMD ["rasa", "run", "--enable-api", "--cors", "*", "--port", "5005"]
