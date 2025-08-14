@@ -26,18 +26,21 @@ class ActionSearchRooms(Action):
             dispatcher.utter_message(text="আপনার বাজেট কত? What's your monthly budget?")
             return []
 
-        # Search using database
+        # Search using database - fallback to demo data if database fails
         try:
             matching_rooms = db.search_properties(location, budget, preferences)
             
-            # Log search analytics
-            db.log_search_analytics(
-                user_id=None,  # You can get user_id from session later
-                location=location,
-                budget=budget,
-                preferences=preferences,
-                results_count=len(matching_rooms)
-            )
+            # Log search analytics (only if database is available)
+            try:
+                db.log_search_analytics(
+                    user_id=None,  # You can get user_id from session later
+                    location=location,
+                    budget=budget,
+                    preferences=preferences,
+                    results_count=len(matching_rooms)
+                )
+            except:
+                pass  # Ignore analytics logging failures
             
             if matching_rooms:
                 response = f"🎉 Found {len(matching_rooms)} room(s) in {location.title()}:\n\n"
@@ -47,16 +50,73 @@ class ActionSearchRooms(Action):
                     response += f"📞 Contact: {room['owner_phone']}\n"
                     response += f"👤 Owner: {room['owner_name']}\n\n"
             else:
-                response = f"😔 No rooms found in {location.title()} within ৳{int(budget)}.\n\n"
-                response += "Try:\n• Increasing your budget\n• Different location\n• Checking nearby areas"
+                # Fallback to demo data when no database results
+                matching_rooms = self._get_demo_rooms(location, budget)
+                if matching_rooms:
+                    response = f"🎉 Found {len(matching_rooms)} room(s) in {location.title()} (Demo Data):\n\n"
+                    for i, room in enumerate(matching_rooms, 1):
+                        response += f"🏠 **Room {i}: {room['neighborhood']}**\n"
+                        response += f"💰 ৳{room['price']}/month\n"
+                        response += f"📞 Contact: {room['contact']}\n\n"
+                else:
+                    response = f"😔 No rooms found in {location.title()} within ৳{int(budget)}.\n\n"
+                    response += "Try:\n• Increasing your budget\n• Different location\n• Checking nearby areas"
                 
         except Exception as e:
             print(f"Database error: {e}")
-            response = "Sorry, I'm having trouble connecting to the database. Please try again later."
-            matching_rooms = []
+            # Use demo data as fallback
+            matching_rooms = self._get_demo_rooms(location, budget)
+            if matching_rooms:
+                response = f"🎉 Found {len(matching_rooms)} room(s) in {location.title()} (Demo Data):\n\n"
+                for i, room in enumerate(matching_rooms, 1):
+                    response += f"🏠 **Room {i}: {room['neighborhood']}**\n"
+                    response += f"💰 ৳{room['price']}/month\n"
+                    response += f"📞 Contact: {room['contact']}\n\n"
+            else:
+                response = "Sorry, I'm currently having technical difficulties. Please try again later or contact support."
+                matching_rooms = []
 
         dispatcher.utter_message(text=response)
         return [SlotSet("search_results", matching_rooms)]
+    
+    def _get_demo_rooms(self, location, budget):
+        """Fallback demo data when database is not available"""
+        demo_rooms = [
+            {
+                "neighborhood": f"{location.title()} Demo Area",
+                "price": 12000,
+                "contact": "01712345678",
+                "type": "single",
+                "furnished": True,
+                "occupancy": ["bachelor", "student"],
+                "gender_preference": "any",
+                "amenities": ["WiFi", "AC", "Parking"],
+                "nearby": ["Market", "Bus Stop", "Restaurant"],
+                "transportation": ["Bus", "CNG", "Rickshaw"],
+                "area_details": f"Central {location.title()}",
+                "description": "Well-maintained room in good location",
+                "advance": "2 months rent"
+            },
+            {
+                "neighborhood": f"{location.title()} Central",
+                "price": 15000,
+                "contact": "01812345678",
+                "type": "double",
+                "furnished": False,
+                "occupancy": ["family", "professional"],
+                "gender_preference": "any",
+                "amenities": ["Parking", "Security", "Generator"],
+                "nearby": ["Hospital", "School", "Shopping Mall"],
+                "transportation": ["Metro", "Bus", "Taxi"],
+                "area_details": f"Prime {location.title()}",
+                "description": "Spacious room suitable for families",
+                "advance": "1 month rent"
+            }
+        ]
+        
+        # Filter by budget
+        filtered_rooms = [room for room in demo_rooms if room["price"] <= float(budget) * 1.2]
+        return filtered_rooms[:3]
 
 class ActionGetRoomDetails(Action):
     def name(self) -> Text:

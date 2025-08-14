@@ -9,12 +9,16 @@ load_dotenv()
 class DatabaseConnection:
     def __init__(self):
         self.host = os.getenv('DB_HOST', 'localhost')
-        self.port = int(os.getenv('DB_PORT', 3306))
+        try:
+            self.port = int(os.getenv('DB_PORT', 3306))
+        except (ValueError, TypeError):
+            self.port = 3306
         self.database = os.getenv('DB_NAME', 'rental_system')
         self.user = os.getenv('DB_USER', 'root')
         self.password = os.getenv('DB_PASSWORD', '')
         self.ssl_mode = os.getenv('DB_SSL_MODE', 'DISABLED')
         self.connection = None
+        self.connection_failed = False
 
     def connect(self):
         try:
