@@ -1,33 +1,29 @@
-FROM rasa/rasa:3.6.0-full
+# Use Python slim image instead of heavy Rasa image
+FROM python:3.9-slim
 
-# Switch to root for installations
-USER root
-
-# Install system dependencies
+# Install minimal system dependencies
 RUN apt-get update && apt-get install -y \
-    python3-dev \
-    default-libmysqlclient-dev \
     build-essential \
-    pkg-config \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Install Python packages
+# Install only essential Python packages
 RUN pip install --no-cache-dir \
+    rasa==3.6.0 \
     python-dotenv==1.0.0 \
-    requests \
-    mysql-connector-python==8.0.33 \
-    rasa-sdk==3.6.0
+    requests
 
-# Switch to rasa user
-USER 1001
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash rasa
+USER rasa
 WORKDIR /app
 
-# Copy application files
-COPY --chown=1001:1001 . .
+# Copy only necessary files
+COPY --chown=rasa:rasa config.yml domain.yml endpoints.yml ./
+COPY --chown=rasa:rasa data/ data/
 
-# Train the model
+# Train model (this creates the models/ directory)
 RUN rasa train
 
-# Railway automatically provides PORT environment variable
-# Simple startup command - no complex scripts needed
+# Start command
 CMD rasa run --enable-api --cors "*" --port ${PORT:-8080} --host 0.0.0.0

@@ -1,11 +1,4 @@
-# Core Rasa dependencies (already in base image)
+# Minimal requirements for Railway free tier
 rasa==3.6.0
-rasa-sdk==3.6.0
-
-# Database and utilities
-mysql-connector-python==8.0.33
 python-dotenv==1.0.0
 requests>=2.28.0
-
-# Additional dependencies for production
-gunicorn>=20.1.0

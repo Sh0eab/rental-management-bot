@@ -1,27 +1,49 @@
+# Git and version control
 .git
 .gitignore
-README.md
+
+# Documentation
+README*.md
 *.md
-.vscode
-.idea
+
+# Environment and config files
+.env*
+railway.json
+
+# Database files
+*.sql
+xampp_database_setup.sql
+
+# Python cache
 __pycache__
 *.pyc
 *.pyo
 *.pyd
 .Python
+*.so
 env/
 venv/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
+
+# Models (will be generated during build)
+models/
+
+# Actions (temporarily excluded for size)
+actions/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs and temp files
 *.log
+*.tar.gz
+.tox
+.coverage*
+.cache
+
+# OS files
 .DS_Store
 Thumbs.db
-*.tar.gz
