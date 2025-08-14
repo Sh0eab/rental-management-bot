@@ -34,5 +34,8 @@ EXPOSE 5005
 # Create startup script that uses PORT environment variable
 RUN echo '#!/bin/bash\nset -e\necho "Starting Rasa server..."\nPORT=${PORT:-5005}\necho "Using port: $PORT"\nexec rasa run --enable-api --cors "*" --port "$PORT" --host "0.0.0.0"' > /app/start.sh && chmod +x /app/start.sh
 
-# Start the server
-CMD ["/bin/bash", "/app/start.sh"]
+# Override the base image's ENTRYPOINT to use bash
+ENTRYPOINT ["/bin/bash"]
+
+# Start the server using the startup script
+CMD ["/app/start.sh"]
