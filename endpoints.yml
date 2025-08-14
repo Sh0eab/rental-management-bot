@@ -1,5 +1,5 @@
-# Action server endpoint for production
-action_endpoint:
-  url: "http://localhost:5055/webhook"
+# Action server endpoint - temporarily disabled for deployment
+# action_endpoint:
+#   url: "http://localhost:5055/webhook"
 
-# For production deployment with action server
+# For production deployment - actions disabled initially
