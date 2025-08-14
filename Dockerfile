@@ -20,11 +20,12 @@ COPY --chown=1001:1001 . .
 # Train the model
 RUN rasa train
 
-# Set environment variable
-ENV PORT=5005
+# Render provides PORT via environment variable
+# Default to 10000 if not provided (Render's default)
+ENV PORT=10000
 
-# Expose port
-EXPOSE 5005
+# Expose the port
+EXPOSE $PORT
 
-# Simple command to start Rasa server only
-CMD rasa run --enable-api --cors "*" --port $PORT --host 0.0.0.0
+# Use exec form and proper port variable substitution
+CMD ["sh", "-c", "rasa run --enable-api --cors '*' --port ${PORT} --host 0.0.0.0"]
