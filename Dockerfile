@@ -10,6 +10,10 @@ RUN pip install --no-cache-dir \
     mysql-connector-python==8.0.33 \
     rasa-sdk==3.6.0
 
+# Create startup script that handles PORT properly
+RUN echo '#!/bin/bash\nset -e\nPORT=${PORT:-10000}\necho "Starting Rasa on port: $PORT"\nexec rasa run --enable-api --cors "*" --port "$PORT" --host "0.0.0.0"' > /start.sh && \
+    chmod +x /start.sh
+
 # Switch to rasa user
 USER 1001
 WORKDIR /app
@@ -20,12 +24,8 @@ COPY --chown=1001:1001 . .
 # Train the model
 RUN rasa train
 
-# Render provides PORT via environment variable
-# Default to 10000 if not provided (Render's default)
-ENV PORT=10000
+# Override the ENTRYPOINT to use bash instead of rasa
+ENTRYPOINT ["/bin/bash"]
 
-# Expose the port
-EXPOSE $PORT
-
-# Use exec form and proper port variable substitution
-CMD ["sh", "-c", "rasa run --enable-api --cors '*' --port ${PORT} --host 0.0.0.0"]
+# Run our startup script
+CMD ["/start.sh"]
