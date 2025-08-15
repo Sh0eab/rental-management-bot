@@ -1,6 +1,29 @@
 version: "3.1"
 
 nlu:
+- intent: test
+  examples: |
+    - test
+    - test database
+    - check connection
+    - database test
+    - connection test
+    - test the database
+    - database connection test
+    - check database connection
+    - test db
+    - db test
+    - verify database
+    - check db
+    - test system
+    - system test
+    - health check
+    - status check
+    - connectivity test
+    - verify connection
+    - database health
+    - test connection
+    - check system
 
 - intent: greet
   examples: |
@@ -73,6 +96,19 @@ nlu:
     - want to see room options
     - room er kotha bolun
     - basha khuja diben
+    - I want a house in [dhaka](location) within [15000](budget)
+    - I need a room in [gulshan](location) under [20000](budget)
+    - Find me a place in [chittagong](location) for [18000](budget)
+    - Looking for accommodation in [uttara](location) within [12000](budget)
+    - I want a house in [dhanmondi](location) within [25000](budget)
+    - Need a room in [banani](location) under [30000](budget)
+    - Show me rooms in [dhaka](location) for [15000](budget) taka
+    - I want accommodation in [gulshan](location) within [20000](budget) tk
+    - Find rooms in [chittagong](location) under [18000](budget)
+    - Looking for a place in [mohammadpur](location) within [10000](budget)
+    - I need housing in [mirpur](location) for [14000](budget)
+    - Room needed in [wari](location) under [8000](budget)
+    - Want rental in [tejgaon](location) within [16000](budget)
 
 - intent: inform_location
   examples: |

@@ -6,6 +6,51 @@ import re
 import difflib
 from .database import db
 
+def extract_budget_number(budget_str):
+    """Extract numeric budget value from strings like '15000 taka', '20000', etc."""
+    if budget_str is None:
+        return None
+        
+    # Convert to string if not already
+    budget_str = str(budget_str)
+    
+    # Extract numbers using regex
+    numbers = re.findall(r'\d+', budget_str)
+    if numbers:
+        return float(numbers[0])  # Take the first number found
+    
+    return None
+
+class ActionTestDatabase(Action):
+    def name(self) -> Text:
+        return "action_test_database"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        # Get the user's message
+        user_message = tracker.latest_message.get('text', '')
+        
+        # Test database connection
+        try:
+            properties = db.search_properties(location="dhaka", budget=15000, preferences=None)
+            if properties:
+                response = f"🎉 Database connection successful! Found {len(properties)} properties in database:\n\n"
+                for prop in properties[:2]:
+                    response += f"🏠 {prop.get('title', 'Property')}\n"
+                    response += f"💰 ৳{int(prop['rent_amount'])}/month\n"
+                    response += f"📍 {prop.get('neighborhood', 'Area')}\n"
+                    response += f"📞 {prop.get('owner_phone', 'Contact available')}\n\n"
+            else:
+                response = "Database connected but no properties found. Let me show you demo data:\n\n"
+                response += "🏠 Demo Property in Dhaka\n💰 ৳12,000/month\n📞 01712345678\n"
+        except Exception as e:
+            response = f"Database connection issue: {str(e)}\n\nBut I'm working! Your message was: '{user_message}'\n\nDemo properties:\n🏠 Sample Room in Dhaka\n💰 ৳15,000/month"
+        
+        dispatcher.utter_message(text=response)
+        return []
+
 class ActionSearchRooms(Action):
     def name(self) -> Text:
         return "action_search_rooms"
@@ -26,9 +71,15 @@ class ActionSearchRooms(Action):
             dispatcher.utter_message(text="আপনার বাজেট কত? What's your monthly budget?")
             return []
 
+        # Parse budget to handle strings like '15000 taka'
+        budget_number = extract_budget_number(budget)
+        if budget_number is None:
+            dispatcher.utter_message(text="I couldn't understand your budget. Please specify a number like '15000' or '15000 taka'.")
+            return []
+        
         # Search using database - fallback to demo data if database fails
         try:
-            matching_rooms = db.search_properties(location, budget, preferences)
+            matching_rooms = db.search_properties(location, budget_number, preferences)
             
             # Log search analytics (only if database is available)
             try:
@@ -44,11 +95,32 @@ class ActionSearchRooms(Action):
             
             if matching_rooms:
                 response = f"🎉 Found {len(matching_rooms)} room(s) in {location.title()}:\n\n"
+                # Convert database results to serializable format
+                serializable_rooms = []
                 for i, room in enumerate(matching_rooms[:3], 1):
                     response += f"🏠 **Room {i}: {room['neighborhood']}**\n"
                     response += f"💰 ৳{int(room['rent_amount'])}/month\n"
                     response += f"📞 Contact: {room['owner_phone']}\n"
                     response += f"👤 Owner: {room['owner_name']}\n\n"
+                    
+                    # Create serializable room object
+                    serializable_room = {
+                        "neighborhood": room['neighborhood'],
+                        "price": int(room['rent_amount']),
+                        "contact": room['owner_phone'],
+                        "type": room['property_type'],
+                        "furnished": bool(room['furnished']),
+                        "occupancy": [room['occupancy_type']],
+                        "gender_preference": room['occupancy_type'],
+                        "amenities": room.get('amenities', []),
+                        "nearby": [],  # Will be populated from nearby_places if needed
+                        "transportation": [],  # Will be populated from transportation if needed
+                        "area_details": room['address'],
+                        "description": room.get('description', 'Room in ' + room['neighborhood']),
+                        "advance": f"{room.get('advance_months', 2)} months rent"
+                    }
+                    serializable_rooms.append(serializable_room)
+                matching_rooms = serializable_rooms
             else:
                 # Fallback to demo data when no database results
                 matching_rooms = self._get_demo_rooms(location, budget)
@@ -59,13 +131,13 @@ class ActionSearchRooms(Action):
                         response += f"💰 ৳{room['price']}/month\n"
                         response += f"📞 Contact: {room['contact']}\n\n"
                 else:
-                    response = f"😔 No rooms found in {location.title()} within ৳{int(budget)}.\n\n"
+                    response = f"😔 No rooms found in {location.title()} within ৳{int(budget_number)}.\n\n"
                     response += "Try:\n• Increasing your budget\n• Different location\n• Checking nearby areas"
                 
         except Exception as e:
             print(f"Database error: {e}")
             # Use demo data as fallback
-            matching_rooms = self._get_demo_rooms(location, budget)
+            matching_rooms = self._get_demo_rooms(location, budget_number)
             if matching_rooms:
                 response = f"🎉 Found {len(matching_rooms)} room(s) in {location.title()} (Demo Data):\n\n"
                 for i, room in enumerate(matching_rooms, 1):
@@ -115,7 +187,8 @@ class ActionSearchRooms(Action):
         ]
         
         # Filter by budget
-        filtered_rooms = [room for room in demo_rooms if room["price"] <= float(budget) * 1.2]
+        budget_float = extract_budget_number(budget) if budget else 999999
+        filtered_rooms = [room for room in demo_rooms if room["price"] <= budget_float * 1.2]
         return filtered_rooms[:3]
 
 class ActionGetRoomDetails(Action):

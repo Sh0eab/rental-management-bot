@@ -1,6 +1,15 @@
 version: "3.1"
 
 stories:
+- story: test database connection
+  steps:
+  - intent: test
+  - action: action_test_database
+
+- story: simple test
+  steps:
+  - intent: test
+  - action: action_test_database
 # Basic greeting and search flows
 - story: basic room search - location first
   steps:
@@ -62,6 +71,24 @@ stories:
     - location: "Dhaka"
     - budget: 15000
   - action: action_search_rooms
+
+# Direct combined search without greeting
+- story: direct combined search
+  steps:
+  - intent: search_rooms
+    entities:
+    - location: "dhaka"
+    - budget: 15000
+  - slot_was_set:
+    - location: "dhaka"
+    - budget: 15000
+  - action: action_search_rooms
+
+# Simple greeting response
+- story: simple greeting
+  steps:
+  - intent: greet
+  - action: utter_greet
 
 - story: budget range search
   steps:

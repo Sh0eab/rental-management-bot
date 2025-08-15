@@ -1,6 +1,7 @@
 version: "3.1"
 
 intents:
+  - test
   - greet
   - goodbye
   - search_rooms
@@ -125,6 +126,7 @@ responses:
   - text: "I can help you with:\n🔍 Finding rooms by location and budget\n📋 Getting detailed room information\n📍 Area and neighborhood details\n📞 Contact information for owners\n\nWhat would you like to know?"
 
 actions:
+  - action_test_database
   - action_search_rooms
   - action_get_room_details
   - action_compare_rooms

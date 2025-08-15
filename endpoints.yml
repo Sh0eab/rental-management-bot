@@ -1,5 +1,11 @@
-# Action server endpoint - temporarily disabled for deployment
-# action_endpoint:
-#   url: "http://localhost:5055/webhook"
+# Action server endpoint for local development
+action_endpoint:
+  url: "http://localhost:5055/webhook"
 
-# For production deployment - actions disabled initially
+# Tracker store for XAMPP MySQL
+tracker_store:
+  type: SQL
+  dialect: mysql+pymysql
+  url: mysql+pymysql://root@localhost:3306/rasa_db
+  # If you set up a specific user, use:
+  # url: mysql+pymysql://rasa_user:rasa_password@localhost:3306/rasa_db
